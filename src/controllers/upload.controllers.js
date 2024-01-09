@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage: storage });
-/*
+
 export const getFiles = (req, res) => {
     ensureUploadDirExists();
     fs.readdir(uploadDir, (err, files) => {
@@ -41,25 +41,6 @@ export const getFiles = (req, res) => {
         res.send(files);
     });
 };
-*/
-export const getFiles = (req, res) => {
-    ensureUploadDirExists();
-    fs.readdir(uploadDir, (err, files) => {
-        if (err) throw err;
-
-        // Map each file to its name and size
-        let fileInfos = files.map(file => {
-            // Get file stats
-            let stats = fs.statSync(path.join(uploadDir, file));
-            // Convert size from bytes to MB
-            let sizeInMB = stats.size / 1024 / 1024;
-            return { name: file, size: sizeInMB.toFixed(2) + ' MB' };
-        });
-
-        res.send(fileInfos);
-    });
-};
-
 
 
 export const getFile = (req, res) => {
