@@ -9,6 +9,7 @@ import startCrawling from './routers/crawlerPlaywright.routers.js'
 import crawlerDB from './routers/crawlerDB.routers.js'
 import twitterCrawler from "./routers/twitterCrawler.routers.js"
 import bodyParser from 'body-parser'
+import redditCrawler from "./routers/redditCrawler.routers.js"
 
 
 const app = express()
@@ -30,6 +31,7 @@ app.use('/api', fileRoutes)
 app.use('/api', startCrawling)
 app.use('/api', crawlerDB)
 app.use('/api', twitterCrawler)
+app.use('/api', redditCrawler)
 
 export default app
 
