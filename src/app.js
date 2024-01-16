@@ -10,6 +10,8 @@ import crawlerDB from './routers/crawlerDB.routers.js'
 import twitterCrawler from "./routers/twitterCrawler.routers.js"
 import bodyParser from 'body-parser'
 import redditCrawler from "./routers/redditCrawler.routers.js"
+import videoStreaming from "./routers/videoStreaming.routers.js"
+import musicStreaming from "./routers/musicStreaming.routers.js"
 
 
 const app = express()
@@ -32,6 +34,8 @@ app.use('/api', startCrawling)
 app.use('/api', crawlerDB)
 app.use('/api', twitterCrawler)
 app.use('/api', redditCrawler)
+app.use('/api', videoStreaming)
+app.use('/api', musicStreaming);
 
 export default app
 

@@ -1,4 +1,21 @@
-import playwright from 'playwright';
+
+
+//testomg pw con stealth
+
+
+//import playwright from 'playwright';
+
+import playwright from 'playwright-extra';
+
+
+// Importar el plugin stealth
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+const stealth = StealthPlugin();
+
+// Añadir el plugin a chromium
+playwright.chromium.use(stealth);
+
+
 import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
@@ -9,7 +26,7 @@ const __dirname = path.dirname(__filename);
 const storageStatePath = path.join(__dirname, 'storageStateReddit.json')
 
 //////////////////// Función para capturar URLs /////////////////////
-export async function saveUrlsToFile(URL_PAGE = "https://www.reddit.com/r/LegalTeens/", NUMBER_SCROLLS = 20, TIME_BETWEEN_SCROLL = 3000) {
+export async function saveUrlsToFile(URL_PAGE = "https://www.reddit.com/r/LegalTeens/", NUMBER_SCROLLS = 10, TIME_BETWEEN_SCROLL = 3000) {
     const isUser = URL_PAGE.includes("user");
     console.log(`Es un usuario de reddit?: ${isUser}`);
 
@@ -25,7 +42,10 @@ export async function saveUrlsToFile(URL_PAGE = "https://www.reddit.com/r/LegalT
     });
 
     const storageState = JSON.parse(fs.readFileSync(storageStatePath).toString());
-    const context = await browser.newContext({ storageState: storageState });
+    const context = await browser.newContext({ storageState: storageState,
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36' 
+
+     });
 
     let capturedImageUrls = [];
     const page = await context.newPage();
@@ -41,7 +61,7 @@ export async function saveUrlsToFile(URL_PAGE = "https://www.reddit.com/r/LegalT
         }
     });
 
-    await page.goto(URL_PAGE);
+    await page.goto(URL_PAGE,{ waitUntil: 'networkidle' });
     await page.addStyleTag({ content: 'div, img, video { max-height: 15px !important; }' });
 
     let alreadyOnTopPage = false;
@@ -169,12 +189,15 @@ export async function descargador(urlsParseadas, archiveName) {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-web-security',
-        ]
+        ],
+       
     });
 
     const context = await browser.newContext({
         acceptDownloads: true,
-        downloadsPath: downloadFolder
+        downloadsPath: downloadFolder,
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36' // User Agent personalizado
+
     });
 
     const page = await context.newPage();
@@ -203,7 +226,7 @@ export async function descargador(urlsParseadas, archiveName) {
     for (let url of urls) {
         try {
             console.log(`Navegando a ${url}`);
-            await page.goto(url, { waitUntil: 'load' });
+            await page.goto(url, { waitUntil: 'networkidle' });
             
             console.log('Ejecutando el script en la página.');
             await page.evaluate(() => {

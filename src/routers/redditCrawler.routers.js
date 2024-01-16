@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { appReddit} from '../controllers/reddit-crawler-app/appReddit.js';
 
-import createQueueMiddleware from '../middlewares/queueTwitterCrawler.js'; 
+import createQueueMiddleware from '../middlewares/queueMiddlewere.js';
 
 const router = Router();
 // crear instnacia de queue de la middleware para hacer queus unicas
-const redditQueueMiddleware = createQueueMiddleware().queueMiddleware;
+const { queueMiddleware: redditQueueMiddleware } = createQueueMiddleware();
+
 
 router.post('/reddit-crawler', redditQueueMiddleware, async (req, res) => {
     const { url, nombre, numero } = req.body;

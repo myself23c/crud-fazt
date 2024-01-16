@@ -1,8 +1,18 @@
-import playwright from 'playwright';
+//import playwright from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
 import { fileURLToPath } from 'url';
+
+import playwright from 'playwright-extra';
+
+
+// Importar el plugin stealth
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+const stealth = StealthPlugin();
+
+// Añadir el plugin a chromium
+playwright.chromium.use(stealth);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
